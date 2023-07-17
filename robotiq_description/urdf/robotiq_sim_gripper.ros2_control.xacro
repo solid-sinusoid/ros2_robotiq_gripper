@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <xacro:macro name="robotiq_sim_gripper_ros2_control"
-                 params="name sim_ignition:=false sim_isaac:=false use_fake_hardware:=true">
+                 params="name sim_ignition:=false sim_isaac:=false use_fake_hardware:=true sim_mujoco:=false, mujoco_model">
 
         <ros2_control name="${name}" type="system">
             <!-- Plugins -->
@@ -19,6 +19,10 @@
                     <plugin>mock_components/GenericSystem</plugin>
                     <param name="fake_sensor_commands">${fake_sensor_commands}</param>
                     <param name="state_following_offset">0.0</param>
+                </xacro:if>
+                <xacro:if value="${sim_mujoco}">
+                    <plugin>cartesian_controller_simulation/Simulator</plugin>
+                    <param name="mujoco_model">${mujoco_model}</param>
                 </xacro:if>
             </hardware>
 
@@ -85,7 +89,7 @@
             </joint>
 
             <!-- Only add this with fake hardware mode -->
-            <xacro:unless value="${sim_ignition or sim_isaac}">
+            <xacro:unless value="${sim_ignition or sim_isaac or sim_mujoco}">
                 <gpio name="reactivate_gripper">
                     <command_interface name="reactivate_gripper_cmd" />
                     <command_interface name="reactivate_gripper_response" />

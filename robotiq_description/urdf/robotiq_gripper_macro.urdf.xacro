@@ -3,7 +3,7 @@
 
     <xacro:include filename="$(find robotiq_description)/urdf/robotiq_sim_gripper.ros2_control.xacro"/>
 
-    <xacro:macro name="robotiq_gripper" params="parent *origin sim:=false prefix">
+    <xacro:macro name="robotiq_gripper" params="parent *origin sim:=false prefix mujoco_model sim_mujoco">
         <link name="${prefix}robotiq_85_base_link">
             <visual>
                 <geometry>
@@ -242,7 +242,7 @@
         </joint>
 
         <xacro:if value="${sim}">
-            <xacro:robotiq_sim_gripper_ros2_control name="ros2_sim_control" sim_isaac="false" sim_ignition="true" use_fake_hardware="false">
+            <xacro:robotiq_sim_gripper_ros2_control name="ros2_sim_control" sim_isaac="false" sim_ignition="false" use_fake_hardware="false" sim_mujoco="true" mujoco_model="${mujoco_model}">
             </xacro:robotiq_sim_gripper_ros2_control>
             <gazebo reference="${prefix}robotiq_85_right_finger_tip_link">
                 <mu1>0.2</mu1>
